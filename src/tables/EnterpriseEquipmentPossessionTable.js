@@ -43,8 +43,12 @@ const Form = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -117,6 +121,7 @@ export default function EnterpriseEquipmentPossessionTable() {
                 <p className="Table-header">Выданное оборудование</p>
                 <tbody>
                 <tr>
+                    <th>Id</th>
                     <th>Enterprise equipment id</th>
                     <th>Employee id</th>
                     <th>Start date</th>
@@ -124,7 +129,8 @@ export default function EnterpriseEquipmentPossessionTable() {
                 </tr>
                 {data.map((item, index) => (
                     <tr key={index}>
-                        <td>{item.enterpriseEquipmentId}</td>
+                        <td>{item.id}</td>
+                        <td>{item.equipmentId}</td>
                         <td>{item.employeeId}</td>
                         <td>{item.startDate}</td>
                         <td>{item.endDate}</td>

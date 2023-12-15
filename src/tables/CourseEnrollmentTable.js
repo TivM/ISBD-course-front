@@ -27,7 +27,7 @@ const Form = () => {
 
         const data = {
             employeeDivision: employeeDivision,
-            courseId: courseId,
+            courseId: courseId
         };
 
         fetch('http://localhost:8080/course/toTeam', {
@@ -39,8 +39,12 @@ const Form = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -108,8 +112,8 @@ export default function CourseEnrollmentTable() {
                 {data.map((item, index) => (
                     <tr key={index}>
                         <td>{item.employeeId}</td>
-                        <td>{item.adminId}</td>
-                        <td>{item.isFinished}</td>
+                        <td>{item.courseId}</td>
+                        <td>{item.isFinished ? "true" : "false"}</td>
                     </tr>
                 ))}
                 </tbody>

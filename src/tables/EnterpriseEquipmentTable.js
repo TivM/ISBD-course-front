@@ -41,8 +41,12 @@ const Form = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -107,12 +111,14 @@ export default function EnterpriseEquipmentTable() {
             <p className="Table-header">Оборудование</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Type</th>
                 <th>Serial number</th>
                 <th>Description</th>
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.type}</td>
                     <td>{item.serialNumber}</td>
                     <td>{item.description}</td>

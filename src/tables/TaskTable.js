@@ -123,6 +123,7 @@ export default function TaskTable() {
             <p className="Table-header">Рабочие задачи</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Complexity</th>
@@ -131,6 +132,7 @@ export default function TaskTable() {
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.startDate}</td>
                     <td>{item.endDate}</td>
                     <td>{item.complexity}</td>

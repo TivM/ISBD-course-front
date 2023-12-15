@@ -41,8 +41,12 @@ const Form = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -107,12 +111,14 @@ export default function CourseTable() {
             <p className="Table-header">Курсы</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Name</th>
                 <th>description</th>
                 <th>Category</th>
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.name}</td>
                     <td>{item.description}</td>
                     <td>{item.category}</td>

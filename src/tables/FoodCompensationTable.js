@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Table.css';
 import plusLogo from "../icons/icons8-plus-64.png";
 import cancelLogo from "../icons/icons8-money-buring-isolated-on-a-white-background-48.png"
+import dollarlLogo from "../icons/icons8-dollar-2-50.png"
 
 
 const Modal = ({ isOpen, onClose, children }) => {
@@ -44,8 +45,12 @@ const Form = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -106,6 +111,7 @@ export default function FoodCompensationTable() {
     const openModal = () => {
         setIsModalOpen(true);
         setIsModalOpenCancel(false);
+        setIsModalOpenSum(false)
     };
 
     const closeModal = () => {
@@ -117,10 +123,23 @@ export default function FoodCompensationTable() {
     const openModalCancel = () => {
         setIsModalOpenCancel(true);
         setIsModalOpen(false);
+        setIsModalOpenSum(false)
     };
 
     const closeModalCancel = () => {
+        setIsModalOpenCancel(false);
+    };
+
+    const [isModalOpenSum, setIsModalOpenSum] = useState(false);
+
+    const openModalSum = () => {
+        setIsModalOpenSum(true);
         setIsModalOpen(false);
+        setIsModalOpenCancel(false)
+    };
+
+    const closeModalSum = () => {
+        setIsModalOpenSum(false);
     };
 
 
@@ -130,6 +149,7 @@ export default function FoodCompensationTable() {
             <p className="Table-header">Компенсация питания</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Payment amount</th>
                 <th>Compensation date</th>
                 <th>Is Breakfast</th>
@@ -137,9 +157,10 @@ export default function FoodCompensationTable() {
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.paymentAmount}</td>
                     <td>{item.compensationDate}</td>
-                    <td>{item.isBreakfast}</td>
+                    <td>{item.isBreakfast ? "true" : "false"}</td>
                     <td>{item.employeeId}</td>
                 </tr>
             ))}
@@ -153,6 +174,10 @@ export default function FoodCompensationTable() {
                 <button onClick={openModalCancel}><img src={cancelLogo} alt="cancel"/></button>
                 <Modal isOpen={isModalOpenCancel} onClose={closeModalCancel}>
                     <FormCancel/>
+                </Modal>
+                <button onClick={openModalSum}><img src={dollarlLogo} alt="dollar"/></button>
+                <Modal isOpen={isModalOpenSum} onClose={closeModalSum}>
+                    <FormSum/>
                 </Modal>
             </div>
         </div>
@@ -171,7 +196,7 @@ const FormCancel = () => {
         };
 
         fetch('http://localhost:8080/food/cancel/' + employeeId, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -179,8 +204,12 @@ const FormCancel = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -189,6 +218,69 @@ const FormCancel = () => {
 
     return (
         <form onSubmit={handleFormSubmit}>
+            <div className="form-group">
+                <label htmlFor="employeeId">employeeId</label>
+                <input type={"number"} className="form-control" id="employeeId" value={employeeId}
+                       onChange={e => setEmployeeId(Number(e.target.value))}/>
+            </div>
+            <div className="form-group">
+                <button className="form-control btn btn-primary" type="submit">Submit</button>
+            </div>
+        </form>
+    );
+};
+
+const FormSum = () => {
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
+    const [employeeId, setEmployeeId] = useState();
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+
+        const data = {
+            paymentAmount: startDate,
+            compensationDate: endDate,
+            employeeId: employeeId
+        };
+
+        fetch('http://localhost:8080/food/compsum?' +  new URLSearchParams({
+            start: startDate,
+            end: endDate,
+            id: employeeId
+        }),
+            {
+            method: 'GET',
+        })
+            .then(response => {
+                console.log(response);
+                return response.json();
+            })
+            .then(data => {
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert(data.compensationSum);
+                    console.log('Success:', data);
+                }
+            })
+            .catch((error) => {
+                alert('Error: ' + error);
+                console.error('Error:', error);
+            });    };
+
+    return (
+        <form onSubmit={handleFormSubmit}>
+            <div className="form-group">
+                <label htmlFor="startDate">startDate</label>
+                <input type="date" className="form-control" id="startDate" value={startDate}
+                       onChange={e => setStartDate(e.target.value)}/>
+            </div>
+            <div className="form-group">
+                <label htmlFor="endDate">endDate</label>
+                <input type="date" className="form-control" id="endDate" value={endDate}
+                       onChange={e => setEndDate(e.target.value)}/>
+            </div>
             <div className="form-group">
                 <label htmlFor="employeeId">employeeId</label>
                 <input type={"number"} className="form-control" id="employeeId" value={employeeId}

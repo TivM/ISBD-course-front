@@ -44,8 +44,12 @@ const Form = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -118,6 +122,7 @@ export default function DayOffRequestTable() {
             <p className="Table-header">Отпуска</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Is Approved</th>
@@ -125,9 +130,10 @@ export default function DayOffRequestTable() {
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.startDate}</td>
                     <td>{item.endDate}</td>
-                    <td>{item.isApproved}</td>
+                    <td>{item.isApproved ? "true" : "false"}</td>
                     <td>{item.employeeId}</td>
                 </tr>
             ))}

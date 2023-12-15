@@ -40,10 +40,17 @@ const Form = () => {
             },
             body: JSON.stringify(data),
         })
-            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                return response.json();
+            })
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -109,12 +116,14 @@ export default function AdminTable() {
             <p className="Table-header">Админы</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Division</th>
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.name}</td>
                     <td>{item.age}</td>
                     <td>{item.division}</td>

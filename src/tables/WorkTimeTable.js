@@ -110,12 +110,14 @@ export default function WorkTimeTable() {
             <p className="Table-header">Рабочее время</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Start Timestamp</th>
                 <th>End Timestamp</th>
                 <th>Employee Id</th>
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.startTimestamp}</td>
                     <td>{item.endTimestamp}</td>
                     <td>{item.employeeId}</td>

@@ -43,8 +43,12 @@ const Form = () => {
         })
             .then(response => response.json())
             .then(data => {
-                alert("Успех");
-                console.log('Success:', data);
+                if (data.exceptionMessage)
+                    alert(data.exceptionMessage)
+                else{
+                    alert("Успех");
+                    console.log('Success:', data);
+                }
             })
             .catch((error) => {
                 alert('Error: ' + error);
@@ -116,13 +120,15 @@ export default function ProductivityStatisticsTable() {
             <p className="Table-header">Статистика продутивности</p>
             <tbody>
             <tr>
+                <th>Id</th>
                 <th>Date</th>
-                <th>Employee Id</th>
-                <th>Admin id</th>
                 <th>Manager review</th>
+                <th>Employee Id</th>
+                <th>Admin Id</th>
             </tr>
             {data.map((item, index) => (
                 <tr key={index}>
+                    <td>{item.id}</td>
                     <td>{item.date}</td>
                     <td>{item.managerReview}</td>
                     <td>{item.employeeId}</td>
